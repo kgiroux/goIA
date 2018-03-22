@@ -28,9 +28,9 @@ func main() {
 	entries[1] = 2
 
 	var neurone Neurone
-	neurone.weight[0] = 0.5
-	neurone.weight[1] = 0.7
-	neurone.bias = 0.7
+	neurone.weight[0] = 0.1
+	neurone.weight[1] = 0.2
+	neurone.bias = -0.6
 	neurone.preactivationResult = preactivation(neurone, entries)
 	neurone.output = activationSignoide(neurone)
 	//fmt.Printf("Output %f\n", neurone.output)
@@ -40,7 +40,7 @@ func main() {
 	fmt.Printf("%f\n", neurone.weight[1])
 	fmt.Printf("%f\n", neurone.bias)
 
-	var dataSets [4]DataSet
+	var dataSets [5]DataSet
 	dataSets[0].entries[0] = 2
 	dataSets[0].entries[1] = 2
 	dataSets[0].target = 1
@@ -53,15 +53,20 @@ func main() {
 	dataSets[3].entries[0] = -1
 	dataSets[3].entries[1] = -1
 	dataSets[3].target = 0
-	for i := 0; i < 10000; i++ {
+	dataSets[4].entries[0] = -0.5
+	dataSets[4].entries[1] = -0.5
+	dataSets[4].target = 0
+	for i := 0; i < 75000; i++ {
 		//fmt.Println("Interation : ", i)
 		for j := 0; j < len(dataSets); j++ {
 			neurone.preactivationResult = preactivation(neurone, dataSets[j].entries)
 			neurone.output = activationSignoide(neurone)
-			/*fmt.Println("------------------------------------------")
-			fmt.Printf("Output before%f\n", neurone.output)
-			fmt.Printf("Target expected %f\n", dataSets[j].target)
-			fmt.Println("------------------------------------------")*/
+			fmt.Println("------------------------------------------")
+			fmt.Printf("Y %f\n", neurone.output)
+			fmt.Printf("T %f\n", dataSets[j].target)
+			fmt.Printf("X1 :  %f\n", dataSets[j].entries[0])
+			fmt.Printf("X2 :  %f\n", dataSets[j].entries[1])
+			fmt.Println("------------------------------------------")
 			neurone = descentOfGradient(neurone, dataSets[j].target, dataSets[j].entries)
 		}
 	}
@@ -71,6 +76,21 @@ func main() {
 	fmt.Printf("%f\n", neurone.weight[1])
 	fmt.Printf("%f\n", neurone.bias)
 
+	var entriesVerification [2]float64
+
+	entriesVerification[0] = 15
+	entriesVerification[1] = 15
+
+	neurone.preactivationResult = preactivation(neurone, entriesVerification)
+	neurone.output = activationSignoide(neurone)
+	fmt.Printf("Cas 15 Y %f\n", neurone.output)
+
+	entriesVerification[0] = -0.5
+	entriesVerification[1] = -0.5
+
+	neurone.preactivationResult = preactivation(neurone, entriesVerification)
+	neurone.output = activationSignoide(neurone)
+	fmt.Printf("Cas -15 Y %f\n", neurone.output)
 }
 
 func preactivation(neurone Neurone, entries [2]float64) float64 {
@@ -108,9 +128,9 @@ func descentOfGradient(neurone Neurone, target float64, entries [2]float64) Neur
 	neurone.gradientWeight[1] = (neurone.output - target) * (math.Exp(-neurone.preactivationResult) / math.Pow(2, (1+math.Exp(-neurone.preactivationResult)))) * entries[1]
 	//fmt.Printf("%e\n", neurone.gradientWeight[1])
 
-	neurone.weight[0] = neurone.weight[0] - 0.1*neurone.gradientWeight[0]
-	neurone.weight[1] = neurone.weight[1] - 0.1*neurone.gradientWeight[1]
-	neurone.bias = neurone.bias - 0.01*neurone.gradientBias
+	neurone.weight[0] = neurone.weight[0] - 0.08*neurone.gradientWeight[0]
+	neurone.weight[1] = neurone.weight[1] - 0.08*neurone.gradientWeight[1]
+	neurone.bias = neurone.bias - 0.08*neurone.gradientBias
 
 	//fmt.Println("Nouveau coefficient : ")
 	//fmt.Printf("%f\n", neurone.weight[0])
