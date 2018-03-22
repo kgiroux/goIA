@@ -1,0 +1,10 @@
+Hello world!
+Programme 1 : Neurone
+Initialisation coefficient : 
+0.500000
+0.700000
+0.700000
+Coefficient end: 
+1.612382
+1.812382
+0.647895
